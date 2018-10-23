@@ -1,11 +1,4 @@
-#include <stdlib.h>
 #include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <sys/mman.h>
-#include <string.h>
 #include <elf.h>
 
 #include "chstk.h"
