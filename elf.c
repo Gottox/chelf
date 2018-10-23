@@ -3,7 +3,7 @@
 
 #include "chstk.h"
 
-#ifdef USE_ELF_CLASS_32
+#ifdef USE_ELF_32
 #	define PROCESS_FUNC process_elf32
 #	define MEMSZ_FLAG "%u"
 typedef Elf32_Ehdr ElfN_Ehdr;
