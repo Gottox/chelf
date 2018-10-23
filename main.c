@@ -23,12 +23,13 @@ void err(const char *msg) {
 }
 
 int main(int argc, char *argv[]) {
-	int fd;
-	struct stat st;
-	const char *path;
+	int fd, prot = PROT_READ, open_flags = O_RDONLY;
 	char *endptr;
-	int prot = PROT_READ;
-	int open_flags = O_RDONLY;
+	const char *path;
+	struct stat st;
+	void *elf;
+
+	/* command line parsing */
 
 	if (argc < 2 || argc > 3) {
 		fputs(argv[0], stderr);
@@ -43,6 +44,8 @@ int main(int argc, char *argv[]) {
 	}
 	path = argv[argc - 1];
 
+	/* open and map the elf file */
+
 	if ((fd = open(path, open_flags, 0)) < 0 || fstat(fd, &st) < 0) {
 		err(path);
 	}
@@ -51,12 +54,16 @@ int main(int argc, char *argv[]) {
 		err("too small to be an ELF file");
 	}
 
-	void *elf = mmap(0, st.st_size, prot, MAP_SHARED, fd, 0);
+	elf = mmap(0, st.st_size, prot, MAP_SHARED, fd, 0);
 	if(elf == MAP_FAILED) {
 		err(path);
 	}
-	if (memcmp(elf, ELFMAG, 4) != 0)
+
+	/* validation and parsing */
+
+	if (memcmp(elf, ELFMAG, 4) != 0) {
 		err("wrong magic");
+	}
 	switch(((char *)elf)[4]) {
 	case ELFCLASS32:
 		process_elf32(elf, st.st_size);
@@ -67,6 +74,8 @@ int main(int argc, char *argv[]) {
 	default:
 		err("Unknown ELF class");
 	}
+
+	/* cleanup */
 
 	munmap(elf, st.st_size);
 
