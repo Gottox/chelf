@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
 	int prot = PROT_READ;
 	int open_flags = O_RDONLY;
 
-	if (argc < 2) {
+	if (argc < 2 || argc > 3) {
 		fputs(argv[0], stderr);
 		err(" [STACKSIZE] FILE");
 	} else if (argc == 3) {
