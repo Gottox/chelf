@@ -8,7 +8,7 @@ elf32.o: elf.c chstk.h
 	$(CC) -c -DUSE_ELF_32 $(CFLAGS) $(LDFLAGS) $< -o $@
 
 chstk: main.c elf64.o elf32.o chstk.h
-	$(CC) -g $(CFLAGS) $(LDFLAGS) elf64.o elf32.o $< -o $@
+	$(CC) $(CFLAGS) $(LDFLAGS) elf64.o elf32.o $< -o $@
 
 .PHONY: clean
 
