@@ -29,7 +29,7 @@ static int process_phead(ElfN_Phdr *header) {
 }
 
 static int get_phead_count(void *elf, size_t size, ElfN_Ehdr *head) {
-	if (head->e_phnum == PN_XNUM) {
+	if (head->e_phnum != PN_XNUM) {
 		return head->e_phnum;
 	}
 
