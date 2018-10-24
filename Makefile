@@ -1,4 +1,4 @@
-CFLAGS += -Wall -Werror
+override CFLAGS += -Wall -Werror
 
 .PHONY: clean all
 
