@@ -1,6 +1,8 @@
 #ifndef CHSTK_H
 #define CHSTK_H
 
+#define VERSION "0.1"
+
 extern int new_stack_size;
 
 void err(const char *msg);

@@ -36,6 +36,8 @@ int main(int argc, char *argv[])
 	if (argc < 2 || argc > 3) {
 		fputs(argv[0], stderr);
 		err(" [STACKSIZE] FILE");
+	} else if (strcmp(argv[1], "-v") == 0) {
+		err("chstk-" VERSION);
 	} else if (argc == 3) {
 		prot |= PROT_WRITE;
 		open_flags = O_RDWR;
