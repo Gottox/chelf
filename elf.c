@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <elf.h>
+#include <bits/reg.h>
 
 #include "chstk.h"
 
