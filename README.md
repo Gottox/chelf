@@ -11,7 +11,7 @@ chstk supports both ELF32 and ELF64.
 Building
 --------
 
-To build chstk a only C compiler and a posix compatible libc are needed.
+To build chstk a C compiler and a posix compatible libc are needed.
 
 ```
 make
