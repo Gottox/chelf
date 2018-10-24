@@ -1,4 +1,6 @@
 CFLAGS += -Wall -Werror
+
+.PHONY: clean all
 all: chstk
 
 elf64.o: elf.c chstk.h
@@ -10,7 +12,6 @@ elf32.o: elf.c chstk.h
 chstk: main.c elf64.o elf32.o chstk.h
 	$(CC) $(CFLAGS) $(LDFLAGS) elf64.o elf32.o $< -o $@
 
-.PHONY: clean
 
 clean:
 	rm -f elf64.o elf32.o chstk
