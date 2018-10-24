@@ -1,6 +1,7 @@
 CFLAGS += -Wall -Werror
 
 .PHONY: clean all
+
 all: chstk
 
 elf64.o: elf.c chstk.h

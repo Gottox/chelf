@@ -12,7 +12,8 @@
 
 int new_stack_size = -1;
 
-void err(const char *msg) {
+void err(const char *msg)
+{
 	if (errno) {
 		perror(msg);
 	} else {
@@ -22,7 +23,8 @@ void err(const char *msg) {
 	exit(EXIT_FAILURE);
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 	int fd, prot = PROT_READ, open_flags = O_RDONLY;
 	char *endptr;
 	const char *path;
@@ -55,16 +57,16 @@ int main(int argc, char *argv[]) {
 	}
 
 	elf = mmap(0, st.st_size, prot, MAP_SHARED, fd, 0);
-	if(elf == MAP_FAILED) {
+	if (elf == MAP_FAILED) {
 		err(path);
 	}
 
 	/* validation and parsing */
 
 	if (memcmp(elf, ELFMAG, 4) != 0) {
-		err("wrong magic");
+		err("wrong ELF magic");
 	}
-	switch(((char *)elf)[4]) {
+	switch (((char *)elf)[4]) {
 	case ELFCLASS32:
 		process_elf32(elf, st.st_size);
 		break;

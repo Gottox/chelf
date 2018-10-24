@@ -17,10 +17,11 @@ typedef Elf64_Phdr ElfN_Phdr;
 typedef Elf64_Shdr ElfN_Shdr;
 #endif
 
-static int process_phead(ElfN_Phdr *header) {
-	switch(header->p_type) {
+static int process_phead(ElfN_Phdr *header)
+{
+	switch (header->p_type) {
 	case PT_GNU_STACK:
-		if(new_stack_size >= 0)
+		if (new_stack_size >= 0)
 			header->p_memsz = new_stack_size;
 		else
 			printf(MEMSZ_FLAG "\n", header->p_memsz);
@@ -28,7 +29,8 @@ static int process_phead(ElfN_Phdr *header) {
 	return 0;
 }
 
-static int get_phead_count(void *elf, size_t size, ElfN_Ehdr *head) {
+static int get_phead_count(void *elf, size_t size, ElfN_Ehdr *head)
+{
 	if (head->e_phnum != PN_XNUM) {
 		return head->e_phnum;
 	}
@@ -43,7 +45,8 @@ static int get_phead_count(void *elf, size_t size, ElfN_Ehdr *head) {
 	return section->sh_info;
 }
 
-int PROCESS_FUNC(void *elf, size_t size) {
+int PROCESS_FUNC(void *elf, size_t size)
+{
 	int i, off, phnum;
 	ElfN_Ehdr *head = elf;
 
