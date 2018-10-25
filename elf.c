@@ -12,10 +12,9 @@ typedef Elf32_Phdr ElfN_Phdr;
 typedef Elf32_Shdr ElfN_Shdr;
 #else
 #	define PROCESS_FUNC process_elf64
-#	define PROCESS_FUNC process_elf64
 #	if __WORDSIZE == 64
 #		define MEMSZ_FLAG "%lu"
-# else
+#	else
 #		define MEMSZ_FLAG "%llu"
 #	endif
 
