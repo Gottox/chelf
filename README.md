@@ -1,26 +1,26 @@
-chstk - Change Stack Size
-=========================
+chelf - Change ELF headers
+==========================
 
 Changes or displays the stack size of an ELF binary.
 
 This value is used by [musl-libc](http://musl-libc.org) to increase the
 default stack size.
 
-chstk supports both ELF32 and ELF64.
+chelf supports both ELF32 and ELF64.
 
 Building
 --------
 
-To build chstk a C compiler and a posix compatible libc are needed.
+To build chelf a C compiler and a posix compatible libc are needed.
 
 ```
 make
 ```
 
-To install chstk:
+To install chelf:
 
 ```
-cp chstk /usr/local/bin
+cp chelf /usr/local/bin
 ```
 
 Examples
@@ -29,13 +29,13 @@ Examples
 read the stack size of a file:
 
 ```
-chstk /bin/sh
+chelf /bin/sh
 ```
 
 change the stack size of a file:
 
 ```
-chstk 1052672 /usr/bin/gnome-shell
+chelf 1052672 /usr/bin/gnome-shell
 ```
 
 License

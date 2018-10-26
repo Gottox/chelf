@@ -2,7 +2,7 @@
 #include <elf.h>
 #include <sys/reg.h>
 
-#include "chstk.h"
+#include "chelf.h"
 
 #ifdef USE_ELF_32
 #	define PROCESS_FUNC process_elf32

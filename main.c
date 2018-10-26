@@ -8,7 +8,7 @@
 #include <string.h>
 #include <elf.h>
 
-#include "chstk.h"
+#include "chelf.h"
 
 int new_stack_size = -1;
 
@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
 		fputs(argv[0], stderr);
 		err(" [STACKSIZE] FILE");
 	} else if (strcmp(argv[1], "-v") == 0) {
-		err("chstk-" VERSION);
+		err("chelf-" VERSION);
 	} else if (argc == 3) {
 		prot |= PROT_WRITE;
 		open_flags = O_RDWR;
