@@ -23,7 +23,7 @@ typedef Elf64_Phdr ElfN_Phdr;
 typedef Elf64_Shdr ElfN_Shdr;
 #endif
 
-static int process_phead(void *elf, ElfN_Phdr *header)
+static int process_phead(void *elf, size_t size, ElfN_Phdr *header)
 {
 	switch (header->p_type) {
 	case PT_GNU_STACK:
@@ -36,6 +36,10 @@ static int process_phead(void *elf, ElfN_Phdr *header)
 	case PT_INTERP:
 		if (mode == MODE_READ && header->p_memsz > 0) {
 			fputs(" INTERP=", stdout);
+			if(header->p_offset + header->p_memsz < size) {
+				fputs("INVALID", stdout);
+				return -1;
+			}
 			fwrite(elf + header->p_offset, header->p_memsz - 1,
 					sizeof(char), stdout);
 		}
@@ -79,7 +83,7 @@ int PROCESS_FUNC(const char *path, void *elf, size_t size)
 		if (off + sizeof(ElfN_Phdr) > size) {
 			rv = err(path, "EOF while accessing Program Headers");
 		} else {
-			rv = process_phead(elf, elf + off);
+			rv = process_phead(elf, size, elf + off);
 		}
 	}
 
