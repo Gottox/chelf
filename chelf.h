@@ -3,10 +3,15 @@
 
 #define VERSION "0.1"
 
+enum Mode {
+	MODE_READ,
+	MODE_WRITE,
+};
+extern enum Mode mode;
 extern int new_stack_size;
 
-void err(const char *msg);
-int process_elf64(void *, size_t);
-int process_elf32(void *, size_t);
+int err(const char *what, const char *why);
+int process_elf64(const char *, void *, size_t);
+int process_elf32(const char *, void *, size_t);
 
 #endif /* !CHELF_H */

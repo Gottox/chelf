@@ -23,49 +23,68 @@ typedef Elf64_Phdr ElfN_Phdr;
 typedef Elf64_Shdr ElfN_Shdr;
 #endif
 
-static int process_phead(ElfN_Phdr *header)
+static int process_phead(void *elf, ElfN_Phdr *header)
 {
 	switch (header->p_type) {
 	case PT_GNU_STACK:
-		if (new_stack_size >= 0)
+		if (mode == MODE_READ) {
+			printf(" STACKSIZE=" MEMSZ_FLAG, header->p_memsz);
+		} else if (new_stack_size >= 0) {
 			header->p_memsz = new_stack_size;
-		else
-			printf(MEMSZ_FLAG "\n", header->p_memsz);
+		}
+		break;
+	case PT_INTERP:
+		if (mode == MODE_READ && header->p_memsz > 0) {
+			fputs(" INTERP=", stdout);
+			fwrite(elf + header->p_offset, header->p_memsz - 1, sizeof(char), stdout);
+		}
+		break;
 	}
 	return 0;
 }
 
-static int get_phead_count(void *elf, size_t size, ElfN_Ehdr *head)
+static int get_phead_count(const char *path, void *elf, size_t size, ElfN_Ehdr *head)
 {
 	if (head->e_phnum != PN_XNUM) {
 		return head->e_phnum;
 	}
 
 	if (head->e_shnum < 1) {
-		err("Expected at least one Section Header");
+		return err(path, "Expected at least one Section Header");
 	} else if (head->e_shoff + sizeof(ElfN_Shdr) > size) {
-		err("EOF while accessing Section Headers");
+		return err(path, "EOF while accessing Section Headers");
 	}
 
 	ElfN_Shdr *section = elf + head->e_shoff;
 	return section->sh_info;
 }
 
-int PROCESS_FUNC(void *elf, size_t size)
+int PROCESS_FUNC(const char *path, void *elf, size_t size)
 {
-	int i, off, phnum;
+	int i, off, phnum, rv = 0;
 	ElfN_Ehdr *head = elf;
 
-	phnum = get_phead_count(elf, size, head);
+	phnum = get_phead_count(path, elf, size, head);
+	if (phnum < 0)
+		return -1;
 
 	off = head->e_phoff;
-	for (i = 0; i < phnum; i++, off += head->e_phentsize) {
+	if (mode == MODE_READ) {
+		fputs(path, stdout);
+		fputc(':', stdout);
+	}
+	for (i = 0; i < phnum && rv == 0; i++, off += head->e_phentsize) {
 		if (off + sizeof(ElfN_Phdr) > size) {
-			err("EOF while accessing Program Headers");
+			rv = err(path, "EOF while accessing Program Headers");
+		} else {
+			rv = process_phead(elf, elf + off);
 		}
-
-		process_phead(elf + off);
 	}
 
-	return 0;
+	if (mode == MODE_READ) {
+		fputc('\n', stdout);
+	}
+
+
+	return rv;
 }
