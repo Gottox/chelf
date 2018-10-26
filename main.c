@@ -31,10 +31,11 @@ int err(const char *what, const char *why)
 static int process_file(const char *path)
 {
 	int fd, rv = -1;
-	const int open_flags = (mode == MODE_WRITE) ? O_RDWR : O_RDONLY;
-	const int mmap_flags = (mode == MODE_WRITE) ? (PROT_WRITE|PROT_READ) : PROT_READ;
 	struct stat st;
 	void *elf;
+	const int open_flags = (mode == MODE_WRITE) ? O_RDWR : O_RDONLY;
+	const int mmap_flags = (mode == MODE_WRITE) ?
+				(PROT_WRITE|PROT_READ) : PROT_READ;
 
 	/* open and map the elf file */
 

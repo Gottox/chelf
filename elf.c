@@ -36,14 +36,16 @@ static int process_phead(void *elf, ElfN_Phdr *header)
 	case PT_INTERP:
 		if (mode == MODE_READ && header->p_memsz > 0) {
 			fputs(" INTERP=", stdout);
-			fwrite(elf + header->p_offset, header->p_memsz - 1, sizeof(char), stdout);
+			fwrite(elf + header->p_offset, header->p_memsz - 1,
+					sizeof(char), stdout);
 		}
 		break;
 	}
 	return 0;
 }
 
-static int get_phead_count(const char *path, void *elf, size_t size, ElfN_Ehdr *head)
+static int get_phead_count(const char *path, void *elf, size_t size,
+		ElfN_Ehdr *head)
 {
 	if (head->e_phnum != PN_XNUM) {
 		return head->e_phnum;
