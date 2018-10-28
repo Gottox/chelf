@@ -36,7 +36,7 @@ static int process_phead(void *elf, size_t size, ElfN_Phdr *header)
 	case PT_INTERP:
 		if (mode == MODE_READ && header->p_memsz > 0) {
 			fputs(" INTERP=", stdout);
-			if(header->p_offset + header->p_memsz < size) {
+			if(header->p_offset + header->p_memsz >= size) {
 				fputs("INVALID", stdout);
 				return -1;
 			}
