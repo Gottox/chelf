@@ -35,7 +35,7 @@ chelf /bin/sh
 change the stack size of a file:
 
 ```
-chelf 1052672 /usr/bin/gnome-shell
+chelf -s 1052672 /usr/bin/gnome-shell
 ```
 
 License
