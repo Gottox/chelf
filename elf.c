@@ -7,6 +7,7 @@
 #ifdef USE_ELF_32
 #	define PROCESS_FUNC process_elf32
 #	define MEMSZ_FLAG "%u"
+
 typedef Elf32_Ehdr ElfN_Ehdr;
 typedef Elf32_Phdr ElfN_Phdr;
 typedef Elf32_Shdr ElfN_Shdr;
@@ -23,29 +24,40 @@ typedef Elf64_Phdr ElfN_Phdr;
 typedef Elf64_Shdr ElfN_Shdr;
 #endif
 
+static int process_gnu_stack(void *elf, size_t size, ElfN_Phdr *header)
+{
+	if (mode == MODE_READ) {
+		printf(" STACKSIZE=" MEMSZ_FLAG, header->p_memsz);
+	} else if (new_stack_size >= 0) {
+		header->p_memsz = new_stack_size;
+	}
+	return 0;
+}
+
+static int process_interp(void *elf, size_t size, ElfN_Phdr *header)
+{
+	if (mode == MODE_READ && header->p_memsz > 0) {
+		fputs(" INTERP=", stdout);
+		if(header->p_offset + header->p_memsz >= size) {
+			fputs("INVALID", stdout);
+			return -1;
+		}
+		fwrite(elf + header->p_offset, header->p_memsz - 1,
+				sizeof(char), stdout);
+	}
+	return 0;
+}
+
 static int process_phead(void *elf, size_t size, ElfN_Phdr *header)
 {
 	switch (header->p_type) {
 	case PT_GNU_STACK:
-		if (mode == MODE_READ) {
-			printf(" STACKSIZE=" MEMSZ_FLAG, header->p_memsz);
-		} else if (new_stack_size >= 0) {
-			header->p_memsz = new_stack_size;
-		}
-		break;
+		return process_gnu_stack(elf, size, header);
 	case PT_INTERP:
-		if (mode == MODE_READ && header->p_memsz > 0) {
-			fputs(" INTERP=", stdout);
-			if(header->p_offset + header->p_memsz < size) {
-				fputs("INVALID", stdout);
-				return -1;
-			}
-			fwrite(elf + header->p_offset, header->p_memsz - 1,
-					sizeof(char), stdout);
-		}
-		break;
+		return process_interp(elf, size, header);
+	default:
+		return 0;
 	}
-	return 0;
 }
 
 static int get_phead_count(const char *path, void *elf, size_t size,
@@ -82,9 +94,10 @@ int PROCESS_FUNC(const char *path, void *elf, size_t size)
 	for (i = 0; i < phnum && rv == 0; i++, off += head->e_phentsize) {
 		if (off + sizeof(ElfN_Phdr) > size) {
 			rv = err(path, "EOF while accessing Program Headers");
-		} else {
-			rv = process_phead(elf, size, elf + off);
+			continue;
 		}
+
+		rv = process_phead(elf, size, elf + off);
 	}
 
 	if (mode == MODE_READ) {
