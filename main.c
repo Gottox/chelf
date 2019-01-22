@@ -32,7 +32,7 @@ static int process_file(const char *path)
 {
 	int fd, rv = -1;
 	struct stat st;
-	void *elf;
+	void *elf = NULL;
 	const int open_flags = (mode == MODE_WRITE) ? O_RDWR : O_RDONLY;
 	const int mmap_flags = (mode == MODE_WRITE) ?
 				(PROT_WRITE|PROT_READ) : PROT_READ;
