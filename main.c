@@ -86,7 +86,7 @@ cleanup:
 static int usage(const char *arg0)
 {
 	fputs(arg0, stderr);
-	fputs(" [-s STACKSIZE] FILE...", stderr);
+	fputs(" [-s STACKSIZE] FILE...\n", stderr);
 	return -1;
 }
 
