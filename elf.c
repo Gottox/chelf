@@ -39,7 +39,7 @@ static int process_interp(void *elf, size_t size, ElfN_Phdr *header)
 	if (mode == MODE_READ && header->p_memsz > 0) {
 		fputs(" INTERP=", stdout);
 		if(header->p_offset + header->p_memsz >= size) {
-			fputs("INVALID", stdout);
+			fputs(" INVALID", stdout);
 			return -1;
 		}
 		fwrite(elf + header->p_offset, header->p_memsz - 1,
