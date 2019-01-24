@@ -1,23 +1,16 @@
 #include <stdio.h>
 #include <elf.h>
-#include <sys/reg.h>
 
 #include "chelf.h"
 
 #ifdef USE_ELF_32
 #	define PROCESS_FUNC process_elf32
-#	define MEMSZ_FLAG "%u"
 
 typedef Elf32_Ehdr ElfN_Ehdr;
 typedef Elf32_Phdr ElfN_Phdr;
 typedef Elf32_Shdr ElfN_Shdr;
 #else
 #	define PROCESS_FUNC process_elf64
-#	if __WORDSIZE == 64
-#		define MEMSZ_FLAG "%lu"
-#	else
-#		define MEMSZ_FLAG "%llu"
-#	endif
 
 typedef Elf64_Ehdr ElfN_Ehdr;
 typedef Elf64_Phdr ElfN_Phdr;
@@ -27,7 +20,7 @@ typedef Elf64_Shdr ElfN_Shdr;
 static int process_gnu_stack(void *elf, size_t size, ElfN_Phdr *header)
 {
 	if (mode == MODE_READ) {
-		printf(" STACKSIZE=" MEMSZ_FLAG, header->p_memsz);
+		printf(" STACKSIZE=%ju", (uintmax_t)header->p_memsz);
 	} else if (new_stack_size >= 0) {
 		header->p_memsz = new_stack_size;
 	}
