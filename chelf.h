@@ -1,7 +1,7 @@
 #ifndef CHELF_H
 #define CHELF_H
 
-#define VERSION "0.2.1"
+#define VERSION "0.2.2"
 
 enum Mode {
 	MODE_READ,
