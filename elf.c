@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <elf.h>
+#include <sys/reg.h>
 
 #include "chelf.h"
 
