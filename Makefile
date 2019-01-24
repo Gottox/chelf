@@ -13,6 +13,5 @@ elf32.o: elf.c chelf.h
 chelf: main.c elf64.o elf32.o chelf.h
 	$(CC) $(CFLAGS) $(LDFLAGS) elf64.o elf32.o $< -o $@
 
-
 clean:
 	rm -f elf64.o elf32.o chelf
