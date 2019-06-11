@@ -75,6 +75,9 @@ int PROCESS_FUNC(const char *path, void *elf, size_t size)
 	int i, off, phnum, rv = 0;
 	ElfN_Ehdr *head = elf;
 
+	if (size < sizeof(ElfN_Ehdr)) {
+		return err(path, "Malformed ELF header.");
+	}
 	phnum = get_phead_count(path, elf, size, head);
 	if (phnum < 0)
 		return -1;
