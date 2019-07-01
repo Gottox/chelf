@@ -1,32 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdbool.h>
-#include <sys/types.h>
+#include <elf.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <errno.h>
 #include <sys/mman.h>
 #include <string.h>
-#include <elf.h>
 #include <unistd.h>
 
 #include "chelf.h"
-
-enum Mode mode = MODE_READ;
-int new_stack_size = -1;
-
-int err(const char *what, const char *why)
-{
-	if (why == NULL) {
-		perror(what);
-	} else {
-		fputs(what, stderr);
-		fputs(": ", stderr);
-		fputs(why, stderr);
-		fputc('\n', stderr);
-	}
-	return -1;
-}
 
 static int process_file(const char *path)
 {

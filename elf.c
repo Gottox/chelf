@@ -19,10 +19,17 @@ typedef Elf64_Shdr ElfN_Shdr;
 
 static int process_gnu_stack(void *elf, size_t size, ElfN_Phdr *header)
 {
-	if (mode == MODE_READ) {
+	switch(mode) {
+	case MODE_READ:
 		printf(" STACKSIZE=%ju", (uintmax_t)header->p_memsz);
-	} else if (new_stack_size >= 0) {
-		header->p_memsz = new_stack_size;
+		break;
+	case MODE_WRITE:
+		if (new_stack_size >= 0) {
+			header->p_memsz = new_stack_size;
+		}
+		break;
+	case MODE_DRY:
+		break;
 	}
 	return 0;
 }

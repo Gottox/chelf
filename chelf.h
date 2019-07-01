@@ -4,6 +4,7 @@
 #define VERSION "0.2.2"
 
 enum Mode {
+	MODE_DRY,
 	MODE_READ,
 	MODE_WRITE,
 };
